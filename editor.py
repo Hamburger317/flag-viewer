@@ -157,7 +157,7 @@ def main():
 
     flag = Flag("Unnamed Flag", "", pr.BLACK, [])
 
-    color_picker = AdvancedColorPicker()
+    color_picker = AdvancedColorPicker(pr.Rectangle(0, 400, 150, 150))
     
     while not pr.window_should_close():
         color = color_picker.update()
@@ -174,7 +174,7 @@ def main():
         pr.clear_background(pr.LIGHTGRAY)
 
         pr.gui_status_bar((0, 0, pr.get_screen_width(), 24), _status_text(flag, guide))
-        draw_advanced_picker(pr.Rectangle(0, 400, 150, 150), color_picker)
+        draw_advanced_picker(color_picker)
         # For previewing purposes
         draw_flag(flag, view)
         

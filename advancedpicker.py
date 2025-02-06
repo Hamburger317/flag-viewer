@@ -27,11 +27,13 @@ def hsv_to_string(hsv: pr.Vector3) -> str:
 class Spinner:
     def __init__(
         self,
+        bounds: Optional[pr.Rectangle]=None,
         label: str = "",
         default: Optional[int] = None,
         minimum: Optional[int] = 0,
         maximum: Optional[int] = 100,
     ):
+        self.bounds = bounds
         self.label = label
         self.minimum = minimum
         self.maximum = maximum
@@ -65,7 +67,8 @@ class Spinner:
 
 
 class ColorPicker:
-    def __init__(self, label="") -> None:
+    def __init__(self, bounds=None, label="") -> None:
+        self.bounds = bounds
         self.label = label
         self.previous_state = pr.Vector3(0.0, 1.0, 1.0)
         self.value = pr.Vector3(0.0, 1.0, 1.0)
@@ -85,18 +88,27 @@ class ColorPicker:
     def has_updated(self) -> bool:
         return not pr.vector3_equals(self.previous_state, self.value)
 
+def _necessary_padding(padding_amount, placement):
+    return padding_amount * placement if placement != 0 else 0
 
 class AdvancedColorPicker:
-    def __init__(self) -> None:
-        self.r_spinner = Spinner("R", default=255, maximum=255)
-        self.g_spinner = Spinner("G", default=0, maximum=255)
-        self.b_spinner = Spinner("B", default=0, maximum=255)
+    def __init__(self, bounds: pr.Rectangle) -> None:
+        self.bounds = bounds
+
+        self.r_spinner = Spinner(label="R", default=255, maximum=255)
+        self.g_spinner = Spinner(label="G", default=0, maximum=255)
+        self.b_spinner = Spinner(label="B", default=0, maximum=255)
         self.rgb_spinners = (self.r_spinner, self.g_spinner, self.b_spinner)
 
-        self.h_spinner = Spinner("H", maximum=359)
-        self.s_spinner = Spinner("S", default=100)
-        self.v_spinner = Spinner("V", default=100)
+        self.h_spinner = Spinner(label="H", maximum=359)
+        self.s_spinner = Spinner(label="S", default=100)
+        self.v_spinner = Spinner(label="V", default=100)
         self.hsv_spinners = (self.h_spinner, self.s_spinner, self.v_spinner)
+
+        self.spinners = self.rgb_spinners + self.hsv_spinners
+
+        for i, spinner in enumerate(self.spinners):
+            spinner.bounds = self._get_spinner_position(spinner.label, 0, i)
 
         self.r: int = self.r_spinner.value
         self.g: int = self.g_spinner.value
@@ -106,7 +118,7 @@ class AdvancedColorPicker:
         self.s: float = self.s_spinner.value / 100
         self.v: float = self.v_spinner.value / 100
 
-        self.picker = ColorPicker()
+        self.picker = ColorPicker(bounds)
 
     def update(self) -> pr.Color:
         if self.picker.has_updated():
@@ -203,48 +215,38 @@ class AdvancedColorPicker:
         self.h_spinner.reset_to(int(hsv.x))
         self.s_spinner.reset_to(_normalize(hsv.y))
         self.v_spinner.reset_to(_normalize(hsv.z))
+    
+    def _get_spinner_position(self, label, x_placement, y_placement):
+        placement = pr.Rectangle()
 
-
-def _necessary_padding(padding_amount, placement):
-    return padding_amount * placement if placement != 0 else 0
-
-
-def _place_spinner(picker_bounds, label, x_placement, y_placement):
-    placement = pr.Rectangle()
-
-    bar_width = pr.gui_get_style(pr.GuiControl.COLORPICKER,
+        bar_width = pr.gui_get_style(pr.GuiControl.COLORPICKER,
                                      pr.GuiColorPickerProperty.HUEBAR_WIDTH)
-    bar_padding = pr.gui_get_style(pr.GuiControl.COLORPICKER,
+        bar_padding = pr.gui_get_style(pr.GuiControl.COLORPICKER,
                                    pr.GuiColorPickerProperty.HUEBAR_PADDING)
-    font_size = pr.gui_get_font().baseSize
+        font_size = pr.gui_get_font().baseSize
 
-    x = picker_bounds.x + picker_bounds.width + bar_width + (bar_padding * 2)
-    x += pr.measure_text(label, font_size)
-    x += _necessary_padding(bar_padding, x_placement) + (94 * x_placement)
+        x = self.bounds.x + self.bounds.width + bar_width + (bar_padding * 2)
+        x += pr.measure_text(label, font_size)
+        x += _necessary_padding(bar_padding, x_placement) + (94 * x_placement)
     
-    y = picker_bounds.y + (18 * y_placement)
-    y += _necessary_padding(bar_padding, y_placement)
+        y = self.bounds.y + (18 * y_placement)
+        y += _necessary_padding(bar_padding, y_placement)
 
-    placement.x = x
-    placement.y = y
-    placement.width = 94
-    placement.height = 18
+        placement.x = x
+        placement.y = y
+        placement.width = 94
+        placement.height = 18
     
-    return placement
-
-def _draw_spinner_group(bounds, group, column):
-    for i, spinner in enumerate(group):
-        spinner_bounds = _place_spinner(bounds, spinner.label, column, i)
-        draw_spinner(spinner_bounds, spinner)
+        return placement
 
 
-def draw_color_picker(bounds: pr.Rectangle, picker: ColorPicker) -> None:
-    pr.gui_color_picker_hsv(bounds, picker.label, picker.value)
+def draw_color_picker(picker: ColorPicker) -> None:
+    pr.gui_color_picker_hsv(picker.bounds, picker.label, picker.value)
 
 
-def draw_spinner(bounds: pr.Rectangle, spinner: Spinner) -> None:
+def draw_spinner(spinner: Spinner) -> None:
     pr.gui_spinner(
-        bounds,
+        spinner.bounds,
         spinner.label,
         spinner.pointer,
         spinner.minimum,
@@ -253,18 +255,17 @@ def draw_spinner(bounds: pr.Rectangle, spinner: Spinner) -> None:
     )
 
 
-def draw_advanced_picker(bounds: pr.Rectangle, advanced: AdvancedColorPicker):
-    spinners = advanced.rgb_spinners+advanced.hsv_spinners
-    
-    draw_color_picker(bounds, advanced.picker)
+def draw_advanced_picker(advanced_color_picker: AdvancedColorPicker) -> None:
+    draw_color_picker(advanced_color_picker.picker)
 
-    _draw_spinner_group(bounds, spinners, 0)
+    for spinner in advanced_color_picker.spinners:
+        draw_spinner(spinner)
 
 
 # DEMO
 def main() -> None:
     pr.init_window(800, 600, "RGB Sync")
-    color_picker = AdvancedColorPicker()
+    color_picker = AdvancedColorPicker(pr.Rectangle(10, 50, 150, 150))
 
     while not pr.window_should_close():
         color = color_picker.update()
@@ -276,7 +277,7 @@ def main() -> None:
         pr.begin_drawing()
         pr.clear_background(color)
 
-        draw_advanced_picker(pr.Rectangle(10, 50, 150, 150), color_picker)
+        draw_advanced_picker(color_picker)
 
         pr.end_drawing()
 
