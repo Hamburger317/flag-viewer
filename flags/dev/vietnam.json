@@ -1,0 +1,23 @@
+{
+	"name": "Flag of Vietnam",
+	"category": "country",
+	
+	"background_color": "#C8102E",
+	
+	"shapes": [
+		{
+			"position_x": {
+				"fraction": "1/2",
+				"index": 0
+			},
+			
+			"position_y": {
+				"fraction": "1/2",
+				"index": 0
+			},
+			
+			"color": "#FFCD00",
+			"radius": "5/2"
+		}
+	]
+}

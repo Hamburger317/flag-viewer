@@ -1,0 +1,29 @@
+{
+	"name": "Bisexual Pride Flag",
+	"category": "pride",
+	
+	"background_color": "#9B4F96FF",
+	
+	"divisions": [
+		{
+			"position": {
+				"fraction": "2/5",
+				"index": 0
+			},
+
+			"orientation": "horizontal",		
+			"color": "#D60270FF"
+		},
+		
+		{
+			"position": {
+				"fraction": "2/5",
+				"index": 0
+			},
+			
+			"orientation": "horizontal",
+			"color": "#0038A8FF",
+			"reverse": true
+		}
+	]
+}

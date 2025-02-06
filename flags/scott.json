@@ -1,0 +1,41 @@
+{
+    "name": "Flag of Scottland",
+    "category": "joke",
+
+    "divisions": [
+        {
+            "position": {
+                "fraction": "1/32",
+                "index": 0
+            },
+
+            "orientation": "horizontal",
+            "color": "#344EE1FF"
+        },
+        {
+            "position": {
+                "fraction": "1/32",
+                "index": 31
+            },
+
+            "orientation": "horizontal",
+            "color": "#344EE1FF"
+        },
+        {
+            "position": {
+                "fraction": "1/32",
+                "index": 0
+            },
+            "orientation": "vertical",
+            "color":"#344EE1FF"
+        },
+        {
+            "position": {
+                "fraction": "1/32",
+                "index": 31
+            },
+            "orientation": "vertical",
+            "color":"#344EE1FF"
+        }
+    ]
+}

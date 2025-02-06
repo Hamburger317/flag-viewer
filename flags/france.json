@@ -1,0 +1,36 @@
+{
+	"name": "Flag of France",
+	"category": "country",
+
+	"divisions": [
+		{
+			"position": {
+				"fraction": "1/3",
+				"index": 0
+			},
+		
+			"orientation": "vertical",
+			"color": "#000091FF"
+		},
+		
+		{
+			"position": {
+				"fraction": "1/3",
+				"index": 1
+			},
+			
+			"orientation": "vertical",
+			"color": "#FFFFFFFF"
+		},
+		
+		{
+			"position": {
+				"fraction": "1/3",
+				"index": 2
+			},
+			
+			"orientation": "vertical",
+			"color": "#E1000FFF"
+		}
+	]
+}

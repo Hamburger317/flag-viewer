@@ -1,0 +1,25 @@
+{
+    "name": "Flag of Poland",
+    "category": "country",
+    
+    "divisions": [
+        {
+            "position": {
+                "fraction": "1/2",
+                "index": 0
+            },
+            "orientation": "horizontal",
+            "color": "#FFFFFFFF"
+        },
+        
+        {
+            "position": {
+                "fraction": "1/2",
+                "index": 1
+            },
+            
+            "orientation": "horizontal",
+            "color": "#DC143CFF"
+        }
+    ]
+}

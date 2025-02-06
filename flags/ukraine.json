@@ -1,0 +1,25 @@
+{
+	"name": "Flag of Ukraine",
+	"category": "country",
+	
+	"divisions": [
+		{
+			"position": {
+				"fraction": "1/2",
+				"index": 0
+			},
+			"orientation": "horizontal",
+			"color": "#0057B7FF"
+		},
+		
+		{
+			"position": {
+				"fraction": "1/2",
+				"index": 1
+			},
+			
+			"orientation": "horizontal",
+			"color": "#FFDD00FF"
+		}
+	]
+}
