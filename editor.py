@@ -2,6 +2,7 @@ from fractions import Fraction
 
 import pyray as pr
 
+from advancedpicker import AdvancedColorPicker, draw_advanced_picker
 from division import Division, DivisionGuide
 from draw import draw_division_guide_lines, draw_flag, invert_position
 from flag import Flag
@@ -156,9 +157,10 @@ def main():
 
     flag = Flag("Unnamed Flag", "", pr.BLACK, [])
 
-
+    color_picker = AdvancedColorPicker(pr.Rectangle(0, 400, 150, 150))
+    
     while not pr.window_should_close():
-        color = pr.color_from_hsv(current.x, current.y, current.z)
+        color = color_picker.update()
 
         flag.divisions = _update_divisions(guide, color, view, flag.divisions)
             
@@ -172,8 +174,7 @@ def main():
         pr.clear_background(pr.LIGHTGRAY)
 
         pr.gui_status_bar((0, 0, pr.get_screen_width(), 24), _status_text(flag, guide))
-        pr.gui_color_picker_hsv(pr.Rectangle(0, 400, 150, 150), "KILL ME", current)
-
+        draw_advanced_picker(color_picker)
         # For previewing purposes
         draw_flag(flag, view)
         
