@@ -153,8 +153,6 @@ def main():
     # Default division guide
     guide = DivisionGuide(Fraction(1, 2), "horizontal", False)
 
-    current = pr.Vector3(0, 1.0, 1.0)
-
     flag = Flag("Unnamed Flag", "", pr.BLACK, [])
 
     color_picker = AdvancedColorPicker(pr.Rectangle(0, 400, 150, 150))
