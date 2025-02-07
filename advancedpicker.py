@@ -48,11 +48,39 @@ class Spinner:
 
     @property
     def value(self) -> int:
+        if self.pointer[0] > self.maximum:
+            return self.maximum
+        
+        elif self.pointer[0] < self.minimum:
+            return self.maximum
+
         return self.pointer[0]
 
     @value.setter
     def value(self, value) -> None:
-        self.pointer[0] = value
+        if value > self.maximum:
+            self.pointer[0] = self.maximum
+        
+        elif value < self.minimum:
+            self.pointer[0]
+        
+        else:
+            self.pointer[0] = value
+    
+    def update_edit_mode(self):
+        clicked = pr.is_mouse_button_pressed(pr.MouseButton.MOUSE_BUTTON_LEFT)
+        if not clicked:
+            return
+        
+        mouse_point = pr.get_mouse_position()
+        in_bounds = pr.check_collision_point_rec(mouse_point, self.bounds)
+        
+        if in_bounds:
+            self.can_edit = True
+        
+        else:
+            self.can_edit = False
+        
 
     def iterate(self) -> int:
         self.previous_state = self.value
@@ -121,6 +149,9 @@ class AdvancedColorPicker:
         self.picker = ColorPicker(bounds)
 
     def update(self) -> pr.Color:
+        for spinner in self.spinners:
+            spinner.update_edit_mode()
+
         if self.picker.has_updated():
             self._update_from_picker()
 
